@@ -1,25 +1,12 @@
 import * as THREE from 'three';
-
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 class Environment{
 
     texture;
     constructor(){                
-        var path = "./textures/skybox/";
-        var format = '.jpg';
-        var urls = [
-            new URL('textures/skybox/posx.jpg',import.meta.url),
-            new URL('textures/skybox/negx.jpg',import.meta.url),
-            new URL('textures/skybox/posy.jpg',import.meta.url),
-            new URL('textures/skybox/negy.jpg',import.meta.url),
-            new URL('textures/skybox/posz.jpg',import.meta.url),
-            new URL('textures/skybox/negz.jpg',import.meta.url)
-        ];
-        urls = urls.map(u=>{
-            return new URL(u,import.meta.url)
-        })
-
-        this.texture = new THREE.CubeTextureLoader().load( urls, ()=>{
-            this.loaded = true;
+        var path = new URL('textures/underwater-12k-unclipped-hdr_2K_3e7b4850-9304-4a08-8a17-f74a378f9a0f.exr',import.meta.url)
+        this.texture = new EXRLoader().load( path, ()=>{
+            this.texture.mapping = THREE.EquirectangularReflectionMapping;
         } );
         this.texture.format = THREE.RGBAFormat;
         this.texture.type = THREE.UnsignedByteType;

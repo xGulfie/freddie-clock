@@ -7,11 +7,10 @@ import {animate} from 'animejs'
 import tooloud from 'tooloud';
 const {Perlin} = tooloud
 
-const ANIMSTATE = {
-    ENTERING: Symbol('entering'),
-    PAUSED_AFTER_ENTER: Symbol('paused'),
-    EXITING: Symbol('exiting'),
-    PAUSED_AFTER_EXITING: Symbol('pausedafterexit')
+let sleep = (timeMs)=>{
+    return new Promise((resolve,reject)=>{
+        setTimeout(resolve,timeMs)
+    });
 }
 
 class Freddie{
@@ -19,9 +18,7 @@ class Freddie{
     object;
     wiggleBones=[];
     rootBone;
-    currentAnimation;
     cameraAspect;
-    nextAnimState=ANIMSTATE.ENTERING;
     bodyMesh=null;
     eyeAnimation={completed:true};
     blendShapes={blink:0}
@@ -61,6 +58,7 @@ class Freddie{
                 'flipperl',
                 'flipperr'
             ];
+            // TODO: use {stiffness:700, damping: 28}
             let wiggleBoneWeights = [
                 0.15,
                 0.1,
@@ -103,6 +101,7 @@ class Freddie{
 
             this.rootBone.position.set(0,0,-50)
             this.randomizeGear()
+            this.doMotion()
         })
     }
     update(dt,t,scene,camera){
@@ -111,19 +110,11 @@ class Freddie{
             return;// not loaded yet
         }
         this.cameraAspect = camera.aspect;// use to see where the edge of the scene roughly is
-        const minutef = new Date().getTime() / (1000*60);// good enough for government work
-        // this.rootBone.position.x = 1*3*this.cameraAspect;
-        // this.rootBone.position.y = -1.2+ 1*3;
-
-        // this.rootBone.rotateZ(dt)
-        // this.rootBone.rotateY(dt*1.1)
-        // this.rootBone.rotateX(dt*0.9)
         this.wiggleBones.forEach((wiggleBone) => {
             wiggleBone.update();
         });
 
         this.doIdle(dt,t); // facial animation etc
-        this.doMotion();
         this.applyBlendShapes();
     }
     
@@ -142,10 +133,10 @@ class Freddie{
         this.rootBone.rotation.z=(rz)*2*Math.PI - 0;
         
         let rx = Perlin.noise(0,t*0.1,0);
-        this.rootBone.rotation.x=(rx)*2*Math.PI*0.75 - 0;
+        this.rootBone.rotation.x=(rx)*2*Math.PI*0.5 - 0;
 
         let ry = Perlin.noise(0,0,t*0.1);
-        this.rootBone.rotation.z=(ry)*2*Math.PI*0.75 - 0;
+        this.rootBone.rotation.z=(ry)*2*Math.PI*0.5 - 0;
 
         // second: eyes
         if (this.eyeAnimation.completed){
@@ -178,52 +169,37 @@ class Freddie{
         }
         
     }
-    doMotion(){
-        // set currentAnimation and start it
-        if (this.currentAnimation && !this.currentAnimation.completed){
-            return
-        }
-
-        if (this.nextAnimState == ANIMSTATE.ENTERING){
+    async doMotion(){
+        // this just cycles enter/exit animations basically
+        while(true){
             // enter animation
             // pick a corner position
             let dest = this.getCorner();
-
-            this.currentAnimation = animate(this.rootBone.position,{
+            await animate(this.rootBone.position,{
                 x:dest.x,
                 y: dest.y,
                 z:0,
                 duration:5000,
                 ease: 'inOut(3)'
             })
-            this.nextAnimState=ANIMSTATE.PAUSED_AFTER_ENTER
-        } else if (this.nextAnimState == ANIMSTATE.PAUSED_AFTER_ENTER){
-            this.currentAnimation = animate(this.rootBone.position,{
-                x: this.rootBone.position.x,
-                duration:2000
-            })
-            this.nextAnimState=ANIMSTATE.EXITING
-        }else if (this.nextAnimState == ANIMSTATE.EXITING){
-            // exit animation
-            let dest = this.getCorner();
-            
-            this.currentAnimation = animate(this.rootBone.position,{
-                x: dest.x*3,
-                y: dest.y*3,
+
+            // pause and mug the camera
+            await sleep(2000);
+
+            // swim away
+            let destAway = this.getCorner();            
+            await animate(this.rootBone.position,{
+                x: destAway.x*3,
+                y: destAway.y*3,
                 duration:5000,
                 ease: 'inOut(3)'
             })
-            this.currentAnimation.play()
-            this.nextAnimState=ANIMSTATE.PAUSED_AFTER_EXITING
-        } else if (this.nextAnimState == ANIMSTATE.PAUSED_AFTER_EXITING){
-            // randomly set his gear
             this.randomizeGear();
-            this.currentAnimation = animate(this.rootBone.position,{
-                x: this.rootBone.position.x,
-                duration: 5000
-            })
-            this.nextAnimState = ANIMSTATE.ENTERING
+
+            // pause
+            await sleep(5000)
         }
+        
     }
 
     randomizeGear(){

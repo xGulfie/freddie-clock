@@ -15,7 +15,7 @@ class Clock{
         const loader = new FontLoader();
 
         this.font = loader.parse(require('./fonts/droid_sans_mono_regular.typeface.json'))
-        this.geometry = new TextGeometry( 'Hello three.js!', {
+        this.geometry = new TextGeometry( '12:34', {
             font: this.font,
             size: 1,
             depth: 5,
@@ -30,7 +30,7 @@ class Clock{
             this.geometry,new THREE.MeshPhysicalMaterial({
                 color:0xffff00,
                 metalness:0,
-                roughness:0.8,
+                roughness:0.9,
                 envMap:environment,
                 flatShading:false
             })
@@ -43,7 +43,7 @@ class Clock{
         const d = new Date()
         const minutes = d.getMinutes()
         if (minutes == this.lastMinutes){
-            return;// don't need to re-render canvas
+            return;// don't need to make new mesh
         }
         this.lastMinutes=minutes;
         const hoursFormatted = ('0'+(d.getHours() % 12 || 12).toString()).slice(-2)
@@ -69,7 +69,8 @@ class Clock{
         this.geometry=g;
 
         this.mesh.geometry=this.geometry;
-        this.mesh.scale.set(2,2,2);
+        this.mesh.scale.set(1,1,1);
+        this.mesh.position.set(0,0,4)
         // this.mesh.geometry = BufferGeometryUtils.mergeVertices(this.mesh.geometry, 0.1);
         this.mesh.geometry.computeVertexNormals(true)
 
