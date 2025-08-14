@@ -8,9 +8,10 @@ import tooloud from 'tooloud';
 const {Perlin} = tooloud
 
 const ANIMSTATE = {
-    PAUSED: Symbol('paused'),
     ENTERING: Symbol('entering'),
-    EXITING: Symbol('exiting')
+    PAUSED_AFTER_ENTER: Symbol('paused'),
+    EXITING: Symbol('exiting'),
+    PAUSED_AFTER_EXITING: Symbol('pausedafterexit')
 }
 
 class Freddie{
@@ -21,6 +22,10 @@ class Freddie{
     currentAnimation;
     cameraAspect;
     nextAnimState=ANIMSTATE.ENTERING;
+    bodyMesh=null;
+    eyeAnimation={completed:true};
+    blendShapes={blink:0}
+    harnessMesh=null
     constructor(scene){
         this.parentObj = new THREE.Object3D();
         scene.add(this.parentObj)
@@ -36,6 +41,8 @@ class Freddie{
                 o.frustumCulled=false;
             })
             let mesh = gltf.scene.getObjectByName("Body")
+            this.harnessMesh = gltf.scene.getObjectByName("Harness")
+            this.bodyMesh=mesh;
 
             this.rootBone = gltf.scene.getObjectByName("dolphy_head")
             gltf.scene.getObjectByName("wandl").scale.set(0)
@@ -86,9 +93,16 @@ class Freddie{
             //     }
             // });
 
-            const skeletonHelper = new THREE.SkeletonHelper( mesh );
-            skeletonHelper.material.linewidth = 2;
-            scene.add( skeletonHelper );
+            // const skeletonHelper = new THREE.SkeletonHelper( mesh );
+            // skeletonHelper.material.linewidth = 2;
+            // scene.add( skeletonHelper );
+
+            Object.keys(this.bodyMesh.morphTargetDictionary).forEach(k=>{
+                this.blendShapes[k]=0;
+            })
+
+            this.rootBone.position.set(0,0,-50)
+            this.randomizeGear()
         })
     }
     update(dt,t,scene,camera){
@@ -110,6 +124,7 @@ class Freddie{
 
         this.doIdle(dt,t); // facial animation etc
         this.doMotion();
+        this.applyBlendShapes();
     }
     
     getCorner(n){
@@ -122,6 +137,7 @@ class Freddie{
     }
 
     doIdle(dt,t){
+        // first: idle rotation
         let rz = Perlin.noise(t*0.1,0,0);
         this.rootBone.rotation.z=(rz)*2*Math.PI - 0;
         
@@ -130,6 +146,37 @@ class Freddie{
 
         let ry = Perlin.noise(0,0,t*0.1);
         this.rootBone.rotation.z=(ry)*2*Math.PI*0.75 - 0;
+
+        // second: eyes
+        if (this.eyeAnimation.completed){
+            let b = Perlin.noise(0,t,t*5);
+            if (b > 0.45){
+                // choose from blink or happy eyes
+                if (Math.random() < 0.9){
+                    this.eyeAnimation = animate(this.blendShapes,{
+                        blink:[0,0,1,0,0],
+                        duration:200,
+                        delay:500
+                    })
+                } else {
+                    this.eyeAnimation=animate(this.blendShapes,{
+                        '笑い':[
+                            {to:1,duration:1},
+                            {to:1,duration:2998},
+                            {to:0,duration:1}
+                        ],
+                        'vrc.v_aa':[
+                            {to:1,duration:300, ease:'outBack'},
+                            {to:1,duration:2699},
+                            {to:0}
+                        ],
+                        duration:3000,
+                        delay:500
+                    })
+                }
+            }
+        }
+        
     }
     doMotion(){
         // set currentAnimation and start it
@@ -149,8 +196,14 @@ class Freddie{
                 duration:5000,
                 ease: 'inOut(3)'
             })
-            this.nextAnimState=ANIMSTATE.PAUSED
-        } else if (this.nextAnimState == ANIMSTATE.EXITING){
+            this.nextAnimState=ANIMSTATE.PAUSED_AFTER_ENTER
+        } else if (this.nextAnimState == ANIMSTATE.PAUSED_AFTER_ENTER){
+            this.currentAnimation = animate(this.rootBone.position,{
+                x: this.rootBone.position.x,
+                duration:2000
+            })
+            this.nextAnimState=ANIMSTATE.EXITING
+        }else if (this.nextAnimState == ANIMSTATE.EXITING){
             // exit animation
             let dest = this.getCorner();
             
@@ -161,14 +214,29 @@ class Freddie{
                 ease: 'inOut(3)'
             })
             this.currentAnimation.play()
-            this.nextAnimState=ANIMSTATE.ENTERING
-        } else if (this.nextAnimState == ANIMSTATE.PAUSED){
+            this.nextAnimState=ANIMSTATE.PAUSED_AFTER_EXITING
+        } else if (this.nextAnimState == ANIMSTATE.PAUSED_AFTER_EXITING){
+            // randomly set his gear
+            this.randomizeGear();
             this.currentAnimation = animate(this.rootBone.position,{
                 x: this.rootBone.position.x,
-                duration:500
+                duration: 5000
             })
-            this.nextAnimState=ANIMSTATE.EXITING
+            this.nextAnimState = ANIMSTATE.ENTERING
         }
+    }
+
+    randomizeGear(){
+        this.blendShapes.hat = Math.random() > 0.9 ? 1 : 0;
+        this.harnessMesh.visible = Math.random() > 0.5;
+    }
+    applyBlendShapes(){
+        if (!this.bodyMesh){
+            return;
+        }
+        Object.keys(this.blendShapes).forEach(name=>{
+            this.bodyMesh.morphTargetInfluences[this.bodyMesh.morphTargetDictionary[name]]=this.blendShapes[name]
+        })
     }
 }
 

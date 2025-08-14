@@ -45,8 +45,8 @@ scene.add(clockMesh)
 
 const freddie = new Freddie(scene);
 window.freddie = freddie;
-let c = '#0b4562ff'
-scene.add(new THREE.HemisphereLight(0xaaffff, 0x0b4562,15))
+let c = '#073146ff'
+scene.add(new THREE.HemisphereLight(0xaaffff, 0x073146,15))
 
 function animate() {
     const dt = clock.getDelta();
