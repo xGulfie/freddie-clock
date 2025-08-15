@@ -46,38 +46,23 @@ class Freddie{
             gltf.scene.getObjectByName("wandr").scale.set(0)
             this.rootBone.scale.set(4,4,4)
             
-            let wiggleBoneNames = [
-                'dolph_spine_2',
-                'dolph_spine_3',
-                'dolph_spine_4',
-                'dolph_spine_5',
-                'dolph_spine_6',
-                'dolph_spine_7',
-                'dolph_spine_8',
-                'dolph_spine_9',
-                'flipperl',
-                'flipperr'
-            ];
-            // TODO: use {stiffness:700, damping: 28}
-            let wiggleBoneWeights = [
-                0.15,
-                0.1,
-                0.05,
-                0.05,
-                0.05,
-                0.05,
-                0.05,
-                0.05,
-                0.2,0.2
-            ]
-            let i =0;
-            wiggleBoneNames.forEach(s=>{
+            let wiggleBoneData={
+                dolph_spine_2:{stiffness:700, damping:0.0001, mass:1000, velocity:0.2},
+                dolph_spine_3:{stiffness:100, damping:0.0001, mass:1000, velocity:0.15},
+                dolph_spine_4:{stiffness:100, damping:0.0001, mass:1000, velocity:0.1},
+                dolph_spine_5:{stiffness:100, damping:0.0001, mass:1000, velocity:0.05},
+                dolph_spine_6:{stiffness:100, damping:0.0001, mass:1000, velocity:0.05},
+                dolph_spine_7:{stiffness:80, damping:0.0001, mass:1000, velocity:0.05},
+                dolph_spine_8:{stiffness:60, damping:0.0001, mass:1000, velocity:0.05},
+                dolph_spine_9:{stiffness:40, damping:0.0001, mass:1000, velocity:0.05},
+                flipperl:{stiffness:900, damping:28, velocity:3},
+                flipperr:{stiffness:900, damping:28, velocity:3}
+            }
+
+            Object.keys(wiggleBoneData).forEach(k=>{
                 this.wiggleBones.push(new WiggleBone(
-                    gltf.scene.getObjectByName(s),{
-                        velocity:wiggleBoneWeights[i]
-                    }
-                ))
-                i++;
+                    gltf.scene.getObjectByName(k),wiggleBoneData[k]
+                ));
             })
            
             // mesh.skeleton.bones.forEach((bone) => {
