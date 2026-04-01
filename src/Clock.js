@@ -4,6 +4,13 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { environment } from './environment';
 import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
+function localeUses24HourTime(langCode) {
+  return new Intl.DateTimeFormat(langCode, {
+    hour: 'numeric'
+  }).formatToParts(new Date(2020, 0, 1, 13)).find(part => part.type === 'hour').value.length === 2;
+}
+
+
 class Clock{
     geometry;
     mesh;
@@ -47,7 +54,12 @@ class Clock{
             return;// don't need to make new mesh
         }
         this.lastMinutes=minutes;
-        const hoursFormatted = ('0'+(d.getHours() % 12 || 12).toString()).slice(-2)
+        let hoursFormatted;
+        if (!localeUses24HourTime()){
+            hoursFormatted = ('0'+(d.getHours() % 12 || 12).toString()).slice(-2)
+        } else {
+            hoursFormatted = ('0'+d.getHours().toString()).slice(-2)
+        }
         const minutesFormatted = ('0'+minutes.toString()).slice(-2)
         
         let g = new TextGeometry( hoursFormatted+":"+minutesFormatted, {
