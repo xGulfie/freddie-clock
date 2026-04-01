@@ -17,7 +17,7 @@ class Environment{
     }
 }
 
-globalThis.environment = globalThis.environment || new Environment().texture;
-environment=globalThis.environment;
+// globalThis.environment = globalThis.environment || new Environment().texture;
+// environment=globalThis.environment;
 
 export {environment}
