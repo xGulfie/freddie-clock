@@ -17,7 +17,7 @@ scene.fog = new THREE.FogExp2( fogColor, 0.05 );
 scene.background=fogColor
 renderer.setClearColor(fogColor)
 renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+document.getElementById('app').appendChild( renderer.domElement );
 
 // controls/camera for dev
 // const controls = new OrbitControls( camera, renderer.domElement );
@@ -46,8 +46,8 @@ scene.add(SCENE_PARENT);
 
 
 // skybox
-const bgGeometry = new THREE.BoxGeometry(1000,1000,1000);
-const bg = new THREE.Mesh(bgGeometry, new THREE.MeshBasicMaterial({color:fogColor, side:THREE.BackSide}))
+const bgGeometry = new THREE.BoxGeometry(100,100,100);
+const bg = new THREE.Mesh(bgGeometry, new THREE.MeshBasicMaterial({color:new THREE.Color(0,0,0), side:THREE.BackSide}))
 SCENE_PARENT.add(bg);
 
 SCENE_PARENT.add(bubbles.createBubbles())

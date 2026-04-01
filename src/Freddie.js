@@ -26,7 +26,7 @@ class Freddie{
     constructor(scene){
         this.parentObj = new THREE.Object3D();
         scene.add(this.parentObj)
-        new GLTFLoader().load(new URL('./dolphin.glb',import.meta.url).toString(), (gltf)=>{
+        new GLTFLoader().load(new URL('./dolphin_compressed.glb',import.meta.url).toString(), (gltf)=>{
             
             this.parentObj.add(gltf.scene)
             this.object=gltf.scene

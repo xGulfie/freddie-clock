@@ -5,4 +5,18 @@ html {
   align-items: center;
   justify-content: center;
   height: 100%;
+  /* background: linear-gradient(0deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 31%, rgba(0, 212, 255, 1) 100%); */
+  --mix-a: 70%;
+  --mix-b: 50%;
+  --mix-c: 50%;
+  --mix-to: #c9c9c9;
+
+  background: linear-gradient(-25deg, 
+color-mix(in srgb, rgb(0, 0, 0)         var(--mix-a), var(--mix-to) calc(100% - var(--mix-a))) 0%,
+color-mix(in srgb, rgba(9, 9, 121, 1)   var(--mix-b), var(--mix-to) calc(100% - var(--mix-b))) 31%,
+color-mix(in srgb, rgba(0, 212, 255, 1) var(--mix-c), var(--mix-to) calc(100% - var(--mix-c))) 100%);
+
+}
+#app{
+    mix-blend-mode: hard-light;
 }

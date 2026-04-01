@@ -15,7 +15,7 @@ class Clock{
         const loader = new FontLoader();
 
         this.font = loader.parse(require('./fonts/droid_sans_mono_regular.typeface.json'))
-        this.geometry = new TextGeometry( '12:34', {
+        this.geometry = new TextGeometry( '', {
             font: this.font,
             size: 1,
             depth: 5,
@@ -30,13 +30,14 @@ class Clock{
             this.geometry,new THREE.MeshPhysicalMaterial({
                 color:0xffff00,
                 metalness:0,
-                roughness:0.9,
+                roughness:0.5,
                 envMap:environment,
                 flatShading:false
             })
         )
         this.object.add(this.mesh);
         setInterval(this.updateMesh.bind(this),1000)
+        setInterval(this.updateScale.bind(this),100);
     }
         
     updateMesh(){
@@ -69,13 +70,23 @@ class Clock{
         this.geometry=g;
 
         this.mesh.geometry=this.geometry;
-        this.mesh.scale.set(1,1,1);
         this.mesh.position.set(0,0,4)
         // this.mesh.geometry = BufferGeometryUtils.mergeVertices(this.mesh.geometry, 0.1);
         this.mesh.geometry.computeVertexNormals(true)
 
         // TODO make a geometry atlas of 0-9 and : so I can just translate them instead
 
+    }
+
+    updateScale(){
+        // resize numbers to fit when the aspect ratio is narrow:
+        let aspect = window.innerWidth / window.innerHeight;
+        if (aspect < 1){
+            let sc = aspect*0.75;
+            this.mesh.scale.set(sc,sc,sc)
+        } else {
+            this.mesh.scale.set(1,1,1)
+        }
     }
 
 }

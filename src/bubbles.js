@@ -18,7 +18,7 @@ function mix(a,b,r){
 function createBubbles(){
     const map = new THREE.TextureLoader().load(
         new URL(
-        'textures/bubble.png',
+        'textures/bubble_transformed.png',
         import.meta.url
         )
     );
