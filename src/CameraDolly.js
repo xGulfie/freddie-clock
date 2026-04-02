@@ -6,6 +6,10 @@ const {Perlin} = tooloud
 function genPos(t,outVec){
     let timeScale=0.1;
     let sc=1;
+    let aspect = window.innerHeight / window.innerWidth;
+    if (aspect > 1){
+        sc = sc /aspect;
+    }
     outVec.set(
         sc*Perlin.noise(timeScale*t,0,0),
         sc*Perlin.noise(0,timeScale*t,0),
@@ -15,6 +19,10 @@ function genPos(t,outVec){
 function genRot(t,outEuler){
     let timeScale=0.1;
     let sc=0.1;
+    let aspect = window.innerHeight / window.innerWidth;
+    if (aspect > 1){
+        sc = sc /aspect;
+    }
     outEuler.set(
         sc*Perlin.noise(timeScale*t,0,0),
         sc*Perlin.noise(0,timeScale*t,0),
