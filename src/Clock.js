@@ -4,10 +4,23 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { environment } from './environment';
 import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
-function localeUses24HourTime(langCode) {
-  return new Intl.DateTimeFormat(langCode, {
-    hour: 'numeric'
-  }).formatToParts(new Date(2020, 0, 1, 13)).find(part => part.type === 'hour').value.length === 2;
+function localeUses24HourTime() {
+    try{
+        if (window.location.search.indexOf('24') > -1){
+            return true;
+        } else if (window.location.search.indexOf('12') > -1){
+            return false;
+        }
+
+        let hourCycle = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
+        if (hourCycle == 'h11' || hourCycle == 'h12'){
+            return false;
+        } else {
+            return true;
+        }
+    } catch (e){
+        return false;
+    }
 }
 
 
