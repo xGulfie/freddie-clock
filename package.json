@@ -5,7 +5,8 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build --public-url ./"
+    "build": "parcel build --public-url ./",
+    "build-web":"parcel build --public-url https://gulfie.online/freddie-clock/"
   },
   "dependencies": {
     "animejs": "^4.1.2",
