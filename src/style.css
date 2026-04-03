@@ -19,6 +19,44 @@ color-mix(in srgb, rgba(9, 9, 121, 1)   var(--mix-b), var(--mix-to) calc(100% - 
 color-mix(in srgb, rgba(0, 212, 255, 1) var(--mix-c), var(--mix-to) calc(100% - var(--mix-c))) 100%);
 
 }
+#overlay{
+display: flex;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  bottom: 25%;
+  flex-direction: column;
+  align-items: center;
+  color:black;
+}
 #app{
     mix-blend-mode: hard-light;
+}
+.controlsrow{
+  width:100%;
+  display:flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom:0;
+  transition: all 0.5s ease-out;
+}
+.control{
+  font-family: monospace;
+  text-align: center;
+  color: #8fe5ee;
+  background: #3c95f463;
+  border-radius: 5vmin;
+  justify-content: center;
+  align-items: center;
+  width: 20vmin;
+  height: 20vmin;
+  margin: 3vmin;
+  font-size: 10vmin;
+  text-decoration: none;
+  line-height: 20vmin;
+  border: 1vmin solid currentColor;
+  box-shadow: 0 0.4vmin 2vmin 0 rgba(9, 9, 121, 0.4);
+  font-weight: bold;
+  user-select: none;
 }

@@ -19,9 +19,19 @@
     <script type="module" src="./main.js"></script>
     <noscript>
       <p>
-      Hi! This requires javascript (and webGL) to run! I'll describe it to you: A pink and yellow sparkly dolphin swims around in 3d, and there's a bunch of bubbles that go to the top of the screen. The dolphin swims into the frame and out of it. Sometimes he has different stuff on his body. Anyway have a nice day.
+      Hi! This requires javascript (and webGL) to run! I'll describe it to you: A pink and yellow sparkly dolphin swims around in 3d, and there's a bunch of bubbles that go to the top of the screen. The dolphin swims into the frame and out of it. Sometimes he has different stuff on his body. No trackers or analytics. Anyway have a nice day.
       </p>
     </noscript>
     <div id="app"></div>
+
+    <div id="overlay">
+      <div id="loadingtext"></div>
+      <progress id="progress"></progress>
+      <div class="controlsrow" id="controlsrow">
+        <a class="control" id="hourtoggle" href="#" title="hour toggle">12:</a>
+        <a class="control" id="fullscreen" href="#" title="fullscreen">⛶</a>
+      </div>
+    </div>
   </body>
+  <script>loadingtext.innerHTML="loading javascript..."</script>
 </html>

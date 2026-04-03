@@ -24,7 +24,6 @@ document.getElementById('app').appendChild( renderer.domElement );
 // controls.listenToKeyEvents( window ); // optional
 // controls.enableDamping = true; 
 
-
 const SCENE_PARENT=new THREE.Object3D();
 window.SCENE_PARENT=SCENE_PARENT
 SCENE_PARENT.setRotationFromEuler(new THREE.Euler( -3.112452278105576,-0.23741367371073124, 1.8639032285037975));
@@ -44,6 +43,74 @@ scene.add(SCENE_PARENT);
 // controls.minPolarAngle = Math.PI/2 - allowedTweak;
 // controls.enablePan=false;
 
+// GUI code::
+{
+    ///////////////////////////////////// loading:
+    THREE.DefaultLoadingManager.onProgress=(url, progress)=>{
+        document.getElementById("progress").value = progress/9
+        document.getElementById('loadingtext').innerHTML = `Loaded ${progress} of 9 assets...`
+    }
+    THREE.DefaultLoadingManager.onError=(url)=>{
+        document.getElementById("loadingtext").innerHTML="Whoops! could not load "+url
+    }
+    THREE.DefaultLoadingManager.onLoad=()=>{
+        document.getElementById("loadingtext").style.display='none'
+        document.getElementById("progress").style.display='none'
+    }
+    document.getElementById("loadingtext").innerHTML="Loading assets..."
+        
+    document.getElementById("fullscreen").addEventListener('click', (e)=>{
+        e.preventDefault()
+        if (document.fullscreenElement){
+            document.exitFullscreen()
+        } else {
+            document.documentElement.requestFullscreen()
+        }
+    })
+
+    /////////////////////////////////// set initial state of hour toggle and modify location hash:
+    let hourCycle = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
+    let currentHrs = (hourCycle == 'h11' || hourCycle == 'h12') ? '12' : '24';
+    let oppositeHrs = currentHrs == "12" ? "24" : "12"
+    let h = window.document.location.hash;
+    if (h.indexOf(oppositeHrs) > -1 ){
+        window.location.hash=oppositeHrs
+        document.getElementById("hourtoggle").innerHTML=oppositeHrs+":"
+    } else {
+        window.location.hash=currentHrs
+        document.getElementById("hourtoggle").innerHTML=currentHrs+":"
+    }
+    
+    //////////////////////// hour toggle
+    document.getElementById("hourtoggle").addEventListener('click', (e)=>{
+        e.preventDefault()
+        let h = window.document.location.hash;
+        if (h.indexOf('24') > -1){
+            window.document.location.hash = window.document.location.hash.replace('24','') + '12'
+            document.getElementById("hourtoggle").innerHTML="12:"
+        } else {
+            window.document.location.hash = window.document.location.hash.replace('12','') + '24'
+            document.getElementById("hourtoggle").innerHTML="24:"
+        }
+    });
+
+    /////////////////////////// fade:
+    var timeout;
+    var buttons = document.getElementById('controlsrow')
+    function hideButtons(){
+        buttons.style.opacity=0;
+    }
+    function showButtons(){
+        buttons.style.opacity=1;
+        if (timeout){
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(hideButtons,2500);
+    }
+    timeout = setTimeout(hideButtons, 2500);
+    document.addEventListener('mousemove',showButtons);
+}
+
 
 // skybox
 const bgGeometry = new THREE.BoxGeometry(100,100,100);
@@ -56,7 +123,8 @@ const dolly = new CameraDolly();
 SCENE_PARENT.add(dolly)
 dolly.add(camera);
 camera.position.z = 8;
-const clock = new THREE.Clock()
+const timer = new THREE.Timer()
+timer.connect(document)
 const clockMesh = new Clock().object;
 SCENE_PARENT.add(clockMesh)
 
@@ -66,8 +134,9 @@ let c = '#073146ff'
 SCENE_PARENT.add(new THREE.HemisphereLight(0xaaffff, 0x073146,1))
 
 function animate() {
-    const dt = clock.getDelta();
-    const t = clock.getElapsedTime();
+    timer.update()
+    const dt = timer.getDelta();
+    const t = timer.getElapsed();
     bubbles.updateBubbles(dt)
     // controls.update()
     freddie.update(dt,t,SCENE_PARENT,camera)
@@ -81,7 +150,3 @@ window.addEventListener('resize',function(){
     renderer.setSize( window.innerWidth, window.innerHeight );
 })
 renderer.setAnimationLoop( animate );
-
-document.body.addEventListener('click', ()=>{
-    document.documentElement.requestFullscreen()
-})

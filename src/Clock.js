@@ -5,31 +5,21 @@ import { environment } from './environment';
 import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
 
 function localeUses24HourTime() {
-    try{
-        if (window.location.search.indexOf('24') > -1){
-            return true;
-        } else if (window.location.search.indexOf('12') > -1){
-            return false;
-        }
-
-        let hourCycle = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
-        if (hourCycle == 'h11' || hourCycle == 'h12'){
-            return false;
-        } else {
-            return true;
-        }
-    } catch (e){
+    let h = window.location.hash;
+    if (h.indexOf('24') > -1){
+        return true;
+    } else{
         return false;
     }
 }
 
-
 class Clock{
     geometry;
     mesh;
+    font;
     object;
     lastMinutes=-1;
-    font;
+    lastIs24=false;
     constructor(){
         this.object = new THREE.Object3D();
         const loader = new FontLoader();
@@ -56,19 +46,22 @@ class Clock{
             })
         )
         this.object.add(this.mesh);
-        setInterval(this.updateMesh.bind(this),1000)
-        setInterval(this.updateScale.bind(this),100);
+        setInterval(this.updateMesh.bind(this),103)
+        setInterval(this.updateScale.bind(this),101);
     }
         
     updateMesh(){
         const d = new Date()
         const minutes = d.getMinutes()
-        if (minutes == this.lastMinutes){
+        let tmpIs24=localeUses24HourTime();
+        if (minutes == this.lastMinutes && tmpIs24 == this.lastIs24){
             return;// don't need to make new mesh
-        }
+        }        
+        this.lastIs24=tmpIs24;
         this.lastMinutes=minutes;
+
         let hoursFormatted;
-        if (!localeUses24HourTime()){
+        if (!tmpIs24){
             hoursFormatted = ('0'+(d.getHours() % 12 || 12).toString()).slice(-2)
         } else {
             hoursFormatted = ('0'+d.getHours().toString()).slice(-2)

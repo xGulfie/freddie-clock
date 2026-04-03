@@ -6,17 +6,17 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build --public-url ./",
-    "build-web":"parcel build --public-url https://gulfie.online/freddie-clock/"
+    "build-web": "parcel build --public-url https://gulfie.online/freddie-clock/"
   },
   "dependencies": {
-    "animejs": "^4.1.2",
-    "three": "^0.179.1",
+    "animejs": "4.x",
+    "three": "0.183.x",
     "tooloud": "^2.0.4",
     "wiggle": "^0.0.17"
   },
   "devDependencies": {
     "buffer": "^6.0.3",
-    "parcel": "^2.14.0",
+    "parcel": "2.16.x",
     "sharp": "^0.33.5"
   }
 }
