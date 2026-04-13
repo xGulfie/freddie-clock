@@ -6,6 +6,7 @@ import { Tween } from 'three/examples/jsm/libs/tween.module.js';
 import {animate} from 'animejs'
 import tooloud from 'tooloud';
 const {Perlin} = tooloud
+import {options} from './options'
 
 let sleep = (timeMs)=>{
     return new Promise((resolve,reject)=>{
@@ -26,6 +27,9 @@ class Freddie{
     constructor(scene){
         this.parentObj = new THREE.Object3D();
         scene.add(this.parentObj)
+        if (!options.dolphin){
+            return;// don't load dolphin
+        }
         new GLTFLoader().load(new URL('./dolphin_compressed.glb',import.meta.url).toString(), (gltf)=>{
             
             this.parentObj.add(gltf.scene)
@@ -188,8 +192,13 @@ class Freddie{
     }
 
     randomizeGear(){
-        this.blendShapes.hat = Math.random() > 0.9 ? 1 : 0;
-        this.harnessMesh.visible = Math.random() > 0.5;
+        if (options.gear){
+            this.blendShapes.hat = Math.random() > 0.9 ? 1 : 0;
+            this.harnessMesh.visible = Math.random() > 0.5;
+        } else {
+            this.blendShapes.hat = 1;
+            this.harnessMesh.visible = false;
+        }
     }
     applyBlendShapes(){
         if (!this.bodyMesh){

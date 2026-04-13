@@ -3,15 +3,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { environment } from './environment';
 import { BufferGeometryUtils } from 'three/examples/jsm/Addons.js';
-
-function localeUses24HourTime() {
-    let h = window.location.hash;
-    if (h.indexOf('24') > -1){
-        return true;
-    } else{
-        return false;
-    }
-}
+import {options} from './options.js'
 
 class Clock{
     geometry;
@@ -53,7 +45,7 @@ class Clock{
     updateMesh(){
         const d = new Date()
         const minutes = d.getMinutes()
-        let tmpIs24=localeUses24HourTime();
+        let tmpIs24=options.use24;
         if (minutes == this.lastMinutes && tmpIs24 == this.lastIs24){
             return;// don't need to make new mesh
         }        

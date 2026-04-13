@@ -5,7 +5,7 @@ import * as bubbles from './bubbles.js'
 import {Freddie} from './Freddie.js'
 import {Clock} from './Clock.js'
 import { CameraDolly } from './CameraDolly.js';
-
+import { options } from './options.js';
 window.THREE = THREE
 
 // scene / camera / renderer
@@ -69,27 +69,19 @@ scene.add(SCENE_PARENT);
     })
 
     /////////////////////////////////// set initial state of hour toggle and modify location hash:
-    let hourCycle = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle;
-    let currentHrs = (hourCycle == 'h11' || hourCycle == 'h12') ? '12' : '24';
-    let oppositeHrs = currentHrs == "12" ? "24" : "12"
-    let h = window.document.location.hash;
-    if (h.indexOf(oppositeHrs) > -1 ){
-        window.location.hash=oppositeHrs
-        document.getElementById("hourtoggle").innerHTML=oppositeHrs+":"
+    if (options.use24 ){
+        document.getElementById("hourtoggle").innerHTML="12:"
     } else {
-        window.location.hash=currentHrs
-        document.getElementById("hourtoggle").innerHTML=currentHrs+":"
+        document.getElementById("hourtoggle").innerHTML="24:"
     }
     
     //////////////////////// hour toggle
     document.getElementById("hourtoggle").addEventListener('click', (e)=>{
         e.preventDefault()
-        let h = window.document.location.hash;
-        if (h.indexOf('24') > -1){
-            window.document.location.hash = window.document.location.hash.replace('24','') + '12'
+        options.setUse24(!options.use24);
+        if (options.use24 ){
             document.getElementById("hourtoggle").innerHTML="12:"
         } else {
-            window.document.location.hash = window.document.location.hash.replace('12','') + '24'
             document.getElementById("hourtoggle").innerHTML="24:"
         }
     });
