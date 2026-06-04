@@ -13,5 +13,5 @@
     }
   ],
   "start_url":"https://gulfie.online/freddie-clock/",
-  "display": "fullscreen"
+  "display": "standalone"
 }
