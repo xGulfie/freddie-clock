@@ -60,3 +60,6 @@ display: flex;
   font-weight: bold;
   user-select: none;
 }
+.control-sm{
+  font-size: 7vmin;
+}

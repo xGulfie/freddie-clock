@@ -27,9 +27,6 @@ class Freddie{
     constructor(scene){
         this.parentObj = new THREE.Object3D();
         scene.add(this.parentObj)
-        if (!options.dolphin){
-            return;// don't load dolphin
-        }
         new GLTFLoader().load(new URL('./dolphin_compressed.glb',import.meta.url).toString(), (gltf)=>{
             
             this.parentObj.add(gltf.scene)
@@ -105,6 +102,7 @@ class Freddie{
 
         this.doIdle(dt,t); // facial animation etc
         this.applyBlendShapes();
+        this.object.visible = options.dolphin;
     }
     
     getCorner(n){

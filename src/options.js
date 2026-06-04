@@ -3,7 +3,7 @@ let options = {
     gear: true,
     use24:false,
     load(){
-        let s = window.location.hash + window.location.search
+        let s = (window.localStorage.getItem("opts")||"")
         this.dolphin=s.indexOf('D') == -1        
         this.gear=s.indexOf('G') == -1
         if( s.indexOf('24') > -1){
@@ -17,9 +17,9 @@ let options = {
         this.update()
     },
     update(){
-        // write it to the qs
-        let s = "?"+(this.dolphin?"d":"D")+(this.gear?"g":"G")+(this.use24?"24":"12");
-        window.history.replaceState({}, "", s);
+        // write it to the LS
+        let s = (this.dolphin?"d":"D")+(this.gear?"g":"G")+(this.use24?"24":"12");
+        window.localStorage.setItem("opts",s);
     },
     setDolphin(d){
         this.dolphin = d;

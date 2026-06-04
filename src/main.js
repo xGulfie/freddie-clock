@@ -70,9 +70,9 @@ scene.add(SCENE_PARENT);
     
     /////////////////////////////////// set initial state of hour toggle and modify location hash:
     if (options.use24 ){
-        document.getElementById("hourtoggle").innerHTML="12:"
-    } else {
         document.getElementById("hourtoggle").innerHTML="24:"
+    } else {
+        document.getElementById("hourtoggle").innerHTML="12:"
     }
     
     //////////////////////// hour toggle
@@ -80,12 +80,28 @@ scene.add(SCENE_PARENT);
         e.preventDefault()
         options.setUse24(!options.use24);
         if (options.use24 ){
-            document.getElementById("hourtoggle").innerHTML="12:"
-        } else {
             document.getElementById("hourtoggle").innerHTML="24:"
+        } else {
+            document.getElementById("hourtoggle").innerHTML="12:"
         }
     });
+
+    //////////////////////// dolphin toggle
+    document.getElementById("dolphintoggle").innerHTML = options.dolphin ? "✅&#xFE0E🐬&#xFE0E" : "🚫&#xFE0E🐬&#xFE0E";
+    document.getElementById("dolphintoggle").addEventListener('click', (e)=>{
+        e.preventDefault();
+        options.setDolphin(!options.dolphin);
+        document.getElementById("dolphintoggle").innerHTML = options.dolphin ? "✅&#xFE0E🐬&#xFE0E" : "🚫&#xFE0E🐬&#xFE0E";
+    })
     
+    ////////////////////////// gear toggle
+    document.getElementById("geartoggle").innerHTML = options.gear ? "✅&#xFE0E🧢&#xFE0E" : "🚫&#xFE0E🧢&#xFE0E";
+    document.getElementById("geartoggle").addEventListener('click', (e)=>{
+        e.preventDefault();
+        options.setGear(!options.gear);
+        document.getElementById("geartoggle").innerHTML = options.gear ? "✅&#xFE0E🧢&#xFE0E" : "🚫&#xFE0E🧢&#xFE0E";
+    })
+
     /////////////////////////// fade:
     var timeout;
     var buttons = document.getElementById('controlsrow')
