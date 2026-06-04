@@ -9,6 +9,7 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener("install", (event) => {
   event.waitUntil(
     addResourcesToCache([
+        new URL("./",import.meta.url),
         new URL("./main.js",import.meta.url),
         new URL("./style.css", import.meta.url),
         new URL("./textures/underwater-12k-unclipped-hdr_0_5K_1992a829-4966-4c25-8a8d-1bcb47d85061.exr", import.meta.url),
@@ -51,7 +52,7 @@ const cacheLast = async ({ request, fallbackUrl }) => {
         // When even the fallback response is not available,
         // there is nothing we can do, but we must always
         // return a Response object.
-        return new Response("Network error happened", {
+        return new Response("Network error happened for "+request.url, {
             status: 408,
             headers: { "Content-Type": "text/plain" },
         });
