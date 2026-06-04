@@ -58,7 +58,7 @@ scene.add(SCENE_PARENT);
         document.getElementById("progress").style.display='none'
     }
     document.getElementById("loadingtext").innerHTML="Loading assets..."
-        
+    
     document.getElementById("fullscreen").addEventListener('click', (e)=>{
         e.preventDefault()
         if (document.fullscreenElement){
@@ -67,7 +67,7 @@ scene.add(SCENE_PARENT);
             document.documentElement.requestFullscreen()
         }
     })
-
+    
     /////////////////////////////////// set initial state of hour toggle and modify location hash:
     if (options.use24 ){
         document.getElementById("hourtoggle").innerHTML="12:"
@@ -85,7 +85,7 @@ scene.add(SCENE_PARENT);
             document.getElementById("hourtoggle").innerHTML="24:"
         }
     });
-
+    
     /////////////////////////// fade:
     var timeout;
     var buttons = document.getElementById('controlsrow')
@@ -147,23 +147,24 @@ renderer.setAnimationLoop( animate );
 // register service worker
 
 const registerServiceWorker = async () => {
-  if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register(new URL('./sw.js', import.meta.url), {
-        scope: "/",
-        type:"module"
-      });
-      if (registration.installing) {
-        console.log("Service worker installing");
-      } else if (registration.waiting) {
-        console.log("Service worker installed");
-      } else if (registration.active) {
-        console.log("Service worker active");
-      }
-    } catch (error) {
-      console.error(`Registration failed with ${error}`);
+    if ("serviceWorker" in navigator) {
+        try {
+            let swUrl = new URL('./sw.js', import.meta.url);
+            const registration = await navigator.serviceWorker.register(swUrl, {
+                scope: "./",
+                type:"module"
+            });
+            if (registration.installing) {
+                console.log("Service worker installing");
+            } else if (registration.waiting) {
+                console.log("Service worker installed");
+            } else if (registration.active) {
+                console.log("Service worker active");
+            }
+        } catch (error) {
+            console.error(`Registration failed with ${error}`);
+        }
     }
-  }
 };
 
 registerServiceWorker()
