@@ -1,9 +1,7 @@
 const addResourcesToCache = async (resources) => {
   const cache = await caches.open("v1");
   const proms = resources.map((u)=>{
-    console.log(u);
-    let s=new URL(u,import.meta.url)
-    return cache.add(s);
+    return cache.add(u);
 })
   await Promise.all(proms)
 };
@@ -11,13 +9,13 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener("install", (event) => {
   event.waitUntil(
     addResourcesToCache([
-      "./main.js",
-      "./style.css",
-      "./textures/underwater-12k-unclipped-hdr_0_5K_1992a829-4966-4c25-8a8d-1bcb47d85061.exr",
-      "./dolphin_compressed.glb",
-      "./textures/bubble_transformed.webp",
-      "./textures/bubble_transformed_192.webp",
-      "./textures/preview.webp"
+        new URL("./main.js",import.meta.url),
+        new URL("./style.css", import.meta.url),
+        new URL("./textures/underwater-12k-unclipped-hdr_0_5K_1992a829-4966-4c25-8a8d-1bcb47d85061.exr", import.meta.url),
+        new URL("./dolphin_compressed.glb", import.meta.url),
+        new URL("./textures/bubble_transformed.webp", import.meta.url),
+        new URL("./textures/bubble_transformed_192.webp", import.meta.url),
+        new URL("./textures/preview.webp", import.meta.url)
     ]),
   );
 });
