@@ -493,6 +493,14 @@
     globals "^13.24.0"
     nullthrows "^1.1.1"
 
+"@parcel/packager-raw-url@2.16.4":
+  version "2.16.4"
+  resolved "https://registry.yarnpkg.com/@parcel/packager-raw-url/-/packager-raw-url-2.16.4.tgz#9e6786bacdd5e1a95ab1c41caccf9b8a397e1a68"
+  integrity sha512-qrpsz/wTlPvYM5qnz3N+3pW0a9MRivrN7TiduoS1W1U/UBhsPoOYNG+S6F67KDCmq47mmBKTgEFN9tEazSV+Qw==
+  dependencies:
+    "@parcel/plugin" "2.16.4"
+    "@parcel/utils" "2.16.4"
+
 "@parcel/packager-raw@2.16.4":
   version "2.16.4"
   resolved "https://registry.yarnpkg.com/@parcel/packager-raw/-/packager-raw-2.16.4.tgz#6390274cc7784e037ccb5ad226777beb588d141e"
@@ -796,6 +804,16 @@
     "@parcel/diagnostic" "2.16.4"
     "@parcel/plugin" "2.16.4"
     "@parcel/rust" "2.16.4"
+
+"@parcel/transformer-webmanifest@2.16.4":
+  version "2.16.4"
+  resolved "https://registry.yarnpkg.com/@parcel/transformer-webmanifest/-/transformer-webmanifest-2.16.4.tgz#47cd6433440256b13d56783e3e59f3e1e778cd63"
+  integrity sha512-VAgHURTHhgSI8LQwKIt/oGwAxwRLeWC07fKf+s9r3IX2gPHIKC+RNi1qhWFQEL2owVa5k3/J0B1L5k1/+Lmcjw==
+  dependencies:
+    "@mischnic/json-sourcemap" "^0.1.1"
+    "@parcel/diagnostic" "2.16.4"
+    "@parcel/plugin" "2.16.4"
+    "@parcel/utils" "2.16.4"
 
 "@parcel/types-internal@2.16.4":
   version "2.16.4"

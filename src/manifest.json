@@ -1,0 +1,17 @@
+{
+  "name": "Freddie Clock",
+  "icons": [
+    {
+      "src": "./textures/bubble_transformed.webp",
+      "type": "image/webp",
+      "sizes": "512x512"
+    },
+    {
+      "src": "./textures/bubble_transformed_192.webp",
+      "type": "image/webp",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url":"https://gulfie.online/freddie-clock/",
+  "display": "fullscreen"
+}
