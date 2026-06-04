@@ -4,7 +4,7 @@ const putInCache = async (request, response) => {
     await cache.put(request, response);
 };
 
-const cacheLast = async ({ request, fallbackUrl }) => {
+const cacheLast = async ({ request }) => {
     
     // try to get the resource from the network.
     try {
@@ -19,7 +19,7 @@ const cacheLast = async ({ request, fallbackUrl }) => {
     } catch (error) {
         // If the network request failed,
         // get the fallback response from the cache.
-        const fallbackResponse = await caches.match(fallbackUrl);
+        const fallbackResponse = await caches.match(request);
         if (fallbackResponse) {
             console.log("getting from cache since network failed")
             return fallbackResponse;
@@ -38,8 +38,7 @@ const cacheLast = async ({ request, fallbackUrl }) => {
 self.addEventListener("fetch", (event) => {
     event.respondWith(
         cacheLast({
-            request: event.request,
-            fallbackUrl: "/fallback.html",
+            request: event.request
         }),
     );
 });
