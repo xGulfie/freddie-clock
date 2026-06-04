@@ -186,5 +186,5 @@ const registerServiceWorker = async () => {
 registerServiceWorker()
 
 // this is stupid but I'm going to fetch / manually so it gets cached by the sw lmfao
-fetch("/")
+fetch("./")
 fetch("index.html")
